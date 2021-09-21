@@ -3,13 +3,18 @@ import { getSession } from "next-auth/client";
 import { stripe } from "../../services/stripe";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+
+    //A validação dos parâmetros da requisição, tem que ser feito dentro da função
     if (req.method === 'POST') {
+        //Recupera os dados do usuário logado através da sessão que está nos cookies
         const session = await getSession({ req })
 
+        //Cria um novo "customer" no stripe, para que o pagamento seja possivel
         const stripeCustomer = await stripe.customers.create({
             email: session.user.email
         })
 
+        //Por fim, cria a subscrição
         const checkoutSession = await stripe.checkout.sessions.create({
             customer: stripeCustomer.id,
             payment_method_types: ['card'],
