@@ -1,6 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { query as q } from 'faunadb'
 import { getSession } from "next-auth/client";
+import { faunaClient } from "../../services/fauna";
 import { stripe } from "../../services/stripe";
+
+type User = {
+    ref: {
+        id: string
+    },
+    data: {
+        stripe_customer_id: string
+    }
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -8,15 +19,40 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'POST') {
         //Recupera os dados do usuário logado através da sessão que está nos cookies
         const session = await getSession({ req })
+        const storedUser = await faunaClient.query<User>(
+            q.Get(
+                q.Match(
+                    q.Index('find_user_by_email'),
+                    q.Casefold(session.user.email)
+                )
+            )
+        )
 
-        //Cria um novo "customer" no stripe, para que o pagamento seja possivel
-        const stripeCustomer = await stripe.customers.create({
-            email: session.user.email
-        })
+        let customerId = storedUser.data.stripe_customer_id
+
+        if (!customerId) {
+            //Cria um novo "customer" no stripe, para que o pagamento seja possivel
+            const stripeCustomer = await stripe.customers.create({
+                email: session.user.email
+            })
+
+            await faunaClient.query(
+                q.Update(
+                    q.Ref(q.Collection('users'), storedUser.ref.id),
+                    {
+                        data: {
+                            stripe_customer_id: stripeCustomer.id
+                        }
+                    }
+                )
+            )
+
+        }
+
 
         //Por fim, cria a subscrição
         const checkoutSession = await stripe.checkout.sessions.create({
-            customer: stripeCustomer.id,
+            customer: customerId,
             payment_method_types: ['card'],
             billing_address_collection: 'required',
             line_items: [

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
 import { query as q } from 'faunadb'
-import { faunaClient } from "../../../services/stripe/fauna"
+import { faunaClient } from "../../../services/fauna"
 
 export default NextAuth({
     // Configure one or more authentication providers
