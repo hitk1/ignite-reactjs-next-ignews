@@ -1,8 +1,8 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
-
+import Image from 'next/image'
 import { stripe } from '../services/stripe'
-import { SubscribeButton } from './components/SubscribeButton'
+import { SubscribeButton } from '../components/SubscribeButton'
 import styles from './home.module.scss'
 
 interface HomeProps {
@@ -32,7 +32,7 @@ export default function Home({ product }: HomeProps) {
           />
         </section>
 
-        <img src="/images/avatar.svg" alt="Girl coding" />
+        <Image src="/images/avatar.svg" alt="Girl coding" />
       </main>
     </>
   )

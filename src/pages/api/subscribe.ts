@@ -13,7 +13,7 @@ type User = {
     }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const subscribeApi = async (req: NextApiRequest, res: NextApiResponse) => {
 
     //A validação dos parâmetros da requisição, tem que ser feito dentro da função
     if (req.method === 'POST') {
@@ -73,3 +73,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(405).end('Method not allowed.')
     }
 }
+
+export default subscribeApi
