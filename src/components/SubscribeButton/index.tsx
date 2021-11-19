@@ -4,11 +4,7 @@ import { api } from '../../services/api'
 import { getStripeJs } from '../../services/stripe-js'
 import styles from './styles.module.scss'
 
-interface IProps {
-    priceId: string
-}
-
-const SubscribeButton: React.FC<IProps> = ({ priceId }) => {
+const SubscribeButton: React.FC = () => {
     const [session] = useSession()
     const router = useRouter()
 
