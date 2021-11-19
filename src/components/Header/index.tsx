@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     return (
         <header className={styles.headerContainer}>
             <div className={styles.headerContent}>
-                <Image src="/images/logo.svg" alt="ig.news" />
+                <Image src="/images/logo.svg" alt="ig.news" layout="fill" />
                 <nav>
                     <ActiveLink
                         activeClassName={styles.active}
