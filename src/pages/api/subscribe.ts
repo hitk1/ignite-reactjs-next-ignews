@@ -63,8 +63,8 @@ const subscribeApi = async (req: NextApiRequest, res: NextApiResponse) => {
             ],
             mode: 'subscription',
             allow_promotion_codes: true,
-            success_url: (process.env.NODE_ENV === 'development') ? 'http://localhost:3000/posts' : 'https://ignews-dt3o9newn-hitk1.vercel.app/posts',
-            cancel_url: (process.env.NODE_ENV === 'development') ? 'http://localhost:3000/' : 'https://ignews-dt3o9newn-hitk1.vercel.app'
+            success_url: (process.env.NODE_ENV === 'development') ? 'http://localhost:3000/posts' : process.env.APP_URL!,
+            cancel_url: (process.env.NODE_ENV === 'development') ? 'http://localhost:3000/' : process.env.APP_URL!
         })
 
         return res.status(200).json({ sessionId: checkoutSession.id })
